@@ -13,7 +13,7 @@ categories:
     labels:
       - "chore"
       - "refactor"
-  - title: "🧩 Dependencies"
+  - title: "🫩 Dependencies"
     labels:
       - "dependencies"
 
@@ -28,6 +28,6 @@ template: |
 
   ## 📦 Full Changelog
   repository: `${{ github.repository }}`  
-  previousTag: `${{ env.PREVIOUS_TAG | default: 'N/A' }}`  
-  currentTag: `${{ env.CURRENT_TAG | default: 'N/A' }}`  
-  [Compare Changes](https://github.com/${{ github.repository }}/compare/${{ env.PREVIOUS_TAG | default: 'N/A' }}...${{ env.CURRENT_TAG | default: 'N/A' }})
+  previousTag: `${{ env.PREVIOUS_TAG }}`  
+  currentTag: `${{ env.CURRENT_TAG }}`  
+  [Compare Changes](https://github.com/${{ github.repository }}/compare/${{ env.PREVIOUS_TAG }}...${{ env.CURRENT_TAG }})
