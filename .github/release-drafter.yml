@@ -8,13 +8,13 @@ categories:
   - title: "🐛 Bug Fixes"
     labels:
       - "fix"
-  - title: "🧩 Maintenance"
+  - title: "🛠️ Maintenance"
     labels:
       - "chore"
       - "refactor"
-  - title: "🧩 Dependencies"
+  - title: "📄 Documentation"
     labels:
-      - "dependencies"
+      - "docs"
 
 change-template: "- $TITLE by @$AUTHOR in #$NUMBER"
 no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/${{ github.repository }}/commit/$FULL_SHA))"

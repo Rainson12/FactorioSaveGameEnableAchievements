@@ -7,31 +7,42 @@ CHANGELOG_FILE="CHANGELOG.md"
 LATEST_TAG=${previous_tag:-"N/A"}
 NEW_TAG=${current_tag:-"N/A"}
 
+# Fetch GitHub username using GitHub API
+GITHUB_USERNAME=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+  "https://api.github.com/users/$(git config user.email | cut -d'@' -f1)" | jq -r .login)
+
+# Initialize changelog
 if [ "$LATEST_TAG" == "N/A" ]; then
   echo "No previous tag found. Initial release."
   LATEST_TAG=""
 fi
 
-echo "# 🚀 Release $NEW_TAG" > $CHANGELOG_FILE
-echo "" >> $CHANGELOG_FILE
-echo "🎉 **What's New in this Release?**" >> $CHANGELOG_FILE
-echo "🔍 Review the full list of changes below." >> $CHANGELOG_FILE
-echo "" >> $CHANGELOG_FILE
-echo "---" >> $CHANGELOG_FILE
-
-# Generate sections for features, fixes, and other changes
-echo "## 🚀 Features" >> $CHANGELOG_FILE
-git log --pretty=format:"- 🚀 **Feature:** %s by @%an" $LATEST_TAG..HEAD --grep "Feature:" >> $CHANGELOG_FILE
-echo "" >> $CHANGELOG_FILE
-
-echo "## 🐛 Bug Fixes" >> $CHANGELOG_FILE
-git log --pretty=format:"- 🐛 **Fix:** %s by @%an" $LATEST_TAG..HEAD --grep "Fix:" >> $CHANGELOG_FILE
-echo "" >> $CHANGELOG_FILE
-
-echo "## 🧩 Enhancements" >> $CHANGELOG_FILE
-git log --pretty=format:"- 🧩 **Update:** %s by @%an" $LATEST_TAG..HEAD --grep "Update:" >> $CHANGELOG_FILE
-echo "" >> $CHANGELOG_FILE
-
-# Full commit history link
-echo "## 📦 Full Commit History" >> $CHANGELOG_FILE
-echo "**[🔗 Compare Changes](https://github.com/${GITHUB_REPOSITORY}/compare/${LATEST_TAG}...${NEW_TAG})**" >> $CHANGELOG_FILE
+# Create or update the changelog with a professional structure
+{
+  echo "## 🚀 Release $NEW_TAG"
+  echo "### What's Changed"
+  echo ""
+  
+  # Append categorized commit history
+  echo "#### 🚀 Features"
+  git log --pretty=format:"- ✨ %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -i 'feature' || echo "- _No new features_"
+  echo ""
+  
+  echo "#### 🐛 Fixes"
+  git log --pretty=format:"- 🛠️ %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -i 'fix' || echo "- _No bug fixes_"
+  echo ""
+  
+  echo "#### 📄 Documentation"
+  git log --pretty=format:"- 📝 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -i 'docs' || echo "- _No documentation updates_"
+  echo ""
+  
+  echo "#### 🧰 Maintenance"
+  git log --pretty=format:"- 🔧 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -i 'chore\|refactor' || echo "- _No maintenance updates_"
+  echo ""
+  
+  echo "---"
+  
+  # Full commit history with a compare link
+  REPO_URL="https://github.com/${GITHUB_REPOSITORY}/compare/"
+  echo "**Full commit history:** [Compare Changes](${REPO_URL}${LATEST_TAG}...${NEW_TAG})"
+} > $CHANGELOG_FILE

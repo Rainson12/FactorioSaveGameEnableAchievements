@@ -76,13 +76,11 @@ jobs:
         run: ./.github/scripts/generate-changelog.sh
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       # Read Changelog Content into Environment Variable
       - name: Read Changelog
-        run: |
-          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          cat CHANGELOG.md >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+        run: echo "CHANGELOG<<EOF" >> $GITHUB_ENV && cat CHANGELOG.md >> $GITHUB_ENV && echo "EOF" >> $GITHUB_ENV
 
       # Draft the Release with Changelog
       - name: Draft Release
@@ -98,7 +96,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.current_tag }}
-          name: "Release ${{ env.current_tag }} 🚀"
+          name: "Release ${{ env.current_tag }} 🎉"
           body: ${{ env.CHANGELOG }}
           artifacts: "release.zip"
           draft: false
