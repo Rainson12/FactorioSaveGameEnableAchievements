@@ -9,7 +9,7 @@ This project is a console application that modifies Factorio save files to re-en
 - 🧐 Automatically extracts save files.
 - 🔍 Locates and modifies the necessary data to re-enable achievements.
 - 🗂 Creates a backup of the original save file.
-- 📦 Recompresses and restores the save file.
+- 📦 Recompresses and restores the save file with a versioned zip name.
 
 ---
 
@@ -26,7 +26,7 @@ This project is a console application that modifies Factorio save files to re-en
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Rainson12/FactorioSaveGameEnableAchievements
+git clone https://github.com/${{ github.repository }}
 cd FactorioSaveGameEnableAchievements
 ```
 
@@ -49,7 +49,7 @@ Alternatively, you can open the `.sln` file in Visual Studio and run the project
 ## 🕹️ How to Use
 
 1. Run the application.
-2. When prompted, enter the path to the Factorio save file you wish to modify (e.g., `%appdata%\Factorio\saves\MyFactorioSave.zip`).
+2. When prompted, enter the path to the Factorio save file you wish to modify (e.g., `%appdata%\Factorio\saves\mysave.zip`).
 3. The program will extract, modify, and repack the save file.
 4. A backup of the original save will be created with the `.bak` extension.
 
@@ -75,17 +75,23 @@ FactorioSaveGameEnableAchievements/
 
 ### ✅ How Releases Work
 
-- **Automatic Changelog Generation**:  
+- **Automatic Changelog Generation**:\
   Every time you push a commit to `master`, a GitHub Action workflow automatically generates a changelog based on the commit messages.
-- **Versioning**:  
+- **Versioning**:\
   The project uses semantic versioning based on the format:
 
   ```
   GameVersion-PatchVersion (e.g., 2.0.28-1.1)
   ```
 
-- **New Tag and Release**:  
+- **New Tag and Release**:\
   A new GitHub release is created with the changelog and the compiled executable `.zip`.
+
+  The generated zip will follow the format:
+
+  ```
+  release-<version>.zip (e.g., release-2.0.28-1.0.zip)
+  ```
 
 ---
 
@@ -96,14 +102,14 @@ To ensure the changelog is well-organized, follow this commit message format:
 ```bash
 git commit -m "Feature: Add new gameplay mechanic"
 git commit -m "Fix: Resolve crash on save file load"
-git commit -m "Chore: Update dependencies"
-git commit -m "Docs: Optimize level.dat handling"
+git commit -m "Update: Modify save structure"
+git commit -m "Remove: Deprecated feature"
 ```
 
 - **Feature:** For new additions.
 - **Fix:** For bug fixes.
-- **Chore:** For maintenance or dependency updates.
-- **Docs:** For non-functional changes to the code.
+- **Update:** For enhancements or improvements.
+- **Remove:** For deletions or deprecated features.
 
 ---
 
@@ -111,9 +117,15 @@ git commit -m "Docs: Optimize level.dat handling"
 
 The changelog is automatically generated with every release.
 
-To view the latest changes, check the **[Releases Section](https://github.com/Rainson12/FactorioSaveGameEnableAchievements/releases)**.  
-For a full list of changes:  
-[Compare Changes](https://github.com/Rainson12/FactorioSaveGameEnableAchievements/compare)
+To view the latest changes, check the **[Releases Section](<https://github.com/${{> github.repository }}/releases)**.\
+For a full list of changes:\
+[Compare Changes](<https://github.com/${{> github.repository }}/compare)
+
+---
+
+## 📊 Status
+
+[![.NET Windows Release 🚀](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml/badge.svg)](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml)
 
 ---
 
@@ -136,7 +148,7 @@ For a full list of changes:
 BSD 2-Clause License
 
 ```
-Copyright (c) 2024, Rainson12
+Copyright (c) 2024, ${{ github.repository_owner }}
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 ...
@@ -146,7 +158,7 @@ modification, are permitted provided that the following conditions are met:
 
 ## 🤝 Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss the changes you would like to make.  
+Pull requests are welcome. For major changes, please open an issue first to discuss the changes you would like to make.\
 To contribute:
 
 ```bash
@@ -159,4 +171,4 @@ git push origin feature/your-feature
 
 ## 📩 Contact
 
-For questions or issues, open an [issue](https://github.com/Rainson12/FactorioSaveGameEnableAchievements/issues) or contact directly via GitHub.
+For questions or issues, open an [issue](<https://github.com/${{> github.repository }}/issues) or contact directly via GitHub.

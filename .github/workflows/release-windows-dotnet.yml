@@ -33,8 +33,12 @@ jobs:
           mkdir -p release
           dotnet publish ./FactorioSaveGameEnableAchievements/FactorioSaveGameEnableAchievements.csproj -c Release -o release
 
+      # Create Zip Archive with Version in Name
       - name: Create Zip Archive
-        run: zip -r release.zip release/
+        run: |
+          ZIP_NAME="release-${{ env.current_tag }}.zip"
+          zip -r $ZIP_NAME release/
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
       # Set Git Identity for Tagging
       - name: Set Git Identity
@@ -81,6 +85,14 @@ jobs:
       - name: Read Changelog
         run: echo "CHANGELOG<<EOF" >> $GITHUB_ENV && cat CHANGELOG.md >> $GITHUB_ENV && echo "EOF" >> $GITHUB_ENV
 
+      # Update README Badge
+      - name: Update README Badge
+        run: |
+          BADGE="[![.NET Windows Release 🚀](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml/badge.svg)](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml)"
+          sed -i "/Release Status Badge/c\\$BADGE" README.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Draft the Release with Changelog
       - name: Draft Release
         id: draft_release
@@ -90,13 +102,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Publish the Release
+      # Publish the Release with Versioned Zip
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.current_tag }}
           name: "Release ${{ env.current_tag }}"
           body: ${{ env.CHANGELOG }}
-          artifacts: "release.zip"
+          artifacts: ${{ env.ZIP_NAME }}
           draft: false
           prerelease: false
