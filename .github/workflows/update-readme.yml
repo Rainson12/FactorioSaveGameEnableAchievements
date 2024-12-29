@@ -1,0 +1,43 @@
+name: Update README with Dynamic Info 🚀
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: # Permite execução manual
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Environment Variables
+        run: |
+          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
+          echo "OWNER=${{ github.repository_owner }}" >> $GITHUB_ENV
+          echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+
+      - name: Update README.md
+        run: |
+          sed -i "s|https://github.com/.*/actions/workflows/release-windows-dotnet.yml|https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml|g" README.md
+          sed -i "s|https://github.com/.*/releases|https://github.com/${{ github.repository }}/releases|g" README.md
+          sed -i "s|https://github.com/.*/compare|https://github.com/${{ github.repository }}/compare|g" README.md
+          sed -i "s|\${{ github.repository }}|${{ github.repository }}|g" README.md
+          sed -i "s|\${{ github.repository_owner }}|${{ github.repository_owner }}|g" README.md
+          sed -i "s|\<version\>|${{ env.VERSION }}|g" README.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add README.md
+          git commit -m "Update README with release ${{ env.VERSION }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
