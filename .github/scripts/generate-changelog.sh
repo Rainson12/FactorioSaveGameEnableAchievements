@@ -1,20 +1,20 @@
 #!/bin/bash
+set -e
 
-# Define tags
-LATEST_TAG=$(git describe --tags --abbrev=0)
-NEW_TAG=$(git describe --tags --abbrev=0 HEAD)
+LATEST_TAG=${previous_tag}
+NEW_TAG=${current_tag}
 
-# Gera changelog bonito
-echo "## 🚀 New Features" > changelog.md
-git log $LATEST_TAG..HEAD --grep "Feature:" --pretty=format:"- %s by @%an" >> changelog.md
+echo "Generating changelog from $LATEST_TAG to $NEW_TAG"
+
+echo "## What's Changed" > changelog.md
+echo "" >> changelog.md
+
+# Coletar todos os commits entre as tags
+git log $LATEST_TAG..HEAD --pretty=format:"- %s by @%an" >> changelog.md
 
 echo "" >> changelog.md
-echo "## 🐛 Bug Fixes" >> changelog.md
-git log $LATEST_TAG..HEAD --grep "Fix:" --pretty=format:"- %s by @%an" >> changelog.md
+echo "## 📦 Full Changelog" >> changelog.md
 
-echo "" >> changelog.md
-echo "## 🛠️ Maintenance" >> changelog.md
-git log $LATEST_TAG..HEAD --grep "Chore:" --pretty=format:"- %s by @%an" >> changelog.md
-
-echo "" >> changelog.md
-echo "**Full commit history:** [Compare Changes](https://github.com/${{ github.repository }}/compare/$LATEST_TAG...$NEW_TAG)"
+# Corrigido para usar a variável do GitHub corretamente
+REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
+echo "**Full commit history:** [Compare Changes](${REPO_URL}/compare/$LATEST_TAG...$NEW_TAG)" >> changelog.md
