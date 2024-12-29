@@ -1,9 +1,9 @@
 name-template: "Release ${{ nextReleaseVersion }} 🚀"
 tag-template: "v${{ nextReleaseVersion }}"
-version-template: "${{ nextReleaseVersion }}"
+version-template: ${{ nextReleaseVersion }}
 
 categories:
-  - title: "🚀 Features"
+  - title: "🚀 New Features"
     labels:
       - "feature"
   - title: "🐛 Bug Fixes"
@@ -20,7 +20,7 @@ categories:
 change-template: "- $TITLE by @$AUTHOR in #$NUMBER"
 
 no-labels-merge-method: "title"
-no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/${{ github.repository }}/commit/$FULL_SHA))"
+no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/{{github.repository}}/commit/$FULL_SHA))"
 
 template: |
   ## What's Changed
