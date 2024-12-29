@@ -27,7 +27,7 @@ template: |
   $CHANGES
 
   ## 📦 Full Changelog
-  repository: `{{ github.repository }}`  
+  repository: `{{ github.repository | default: 'unknown/repo' }}`  
   previousTag: `{{ previousTag | default: 'N/A' }}`  
   currentTag: `{{ currentTag | default: 'N/A' }}`  
-  [Compare Changes](https://github.com/{{ github.repository }}/compare/{{ previousTag | default: 'N/A' }}...{{ currentTag | default: 'N/A' }})
+  [Compare Changes](https://github.com/{{ github.repository | default: 'unknown/repo' }}/compare/{{ previousTag | default: 'N/A' }}...{{ currentTag | default: 'N/A' }})
