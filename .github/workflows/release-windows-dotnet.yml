@@ -76,8 +76,9 @@ jobs:
 
       - name: Read Changelog
         run: |
-          CHANGELOG=$(cat CHANGELOG.md | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          cat CHANGELOG.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Draft Release
         id: draft_release
