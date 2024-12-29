@@ -1,27 +1,31 @@
-name: Update README 📝
+name: Update README Automatically
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Update README Links and Badges
+      - name: Set Environment Variables
         run: |
-          bash .github/scripts/update-readme.sh
+          echo "GITHUB_REPOSITORY=${{ github.repository }}" >> $GITHUB_ENV
+          echo "GITHUB_REPOSITORY_OWNER=${{ github.repository_owner }}" >> $GITHUB_ENV
+
+      - name: Generate README
+        run: .github/scripts/generate-readme.sh
 
       - name: Commit Changes
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git diff --quiet && git diff --staged --quiet || git commit -m "Update README with repository info"
+          git diff --quiet && git diff --staged --quiet || git commit -m "Chore: Update README automatically"
           git push
