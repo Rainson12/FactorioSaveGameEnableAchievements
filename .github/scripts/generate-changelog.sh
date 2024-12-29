@@ -20,9 +20,9 @@ echo "" >> $CHANGELOG_FILE
 
 # Append commit history if LATEST_TAG exists
 if [ -n "$LATEST_TAG" ]; then
-  git log --pretty=format:"- %s by @%an" $LATEST_TAG..HEAD >> $CHANGELOG_FILE
+  git log --pretty=format:"- %s by @%ae" $LATEST_TAG..HEAD >> $CHANGELOG_FILE
 else
-  git log --pretty=format:"- %s by @%an" HEAD >> $CHANGELOG_FILE
+  git log --pretty=format:"- %s by @%ae" HEAD >> $CHANGELOG_FILE
 fi
 echo "" >> $CHANGELOG_FILE
 
