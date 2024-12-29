@@ -31,4 +31,4 @@ fi
 
 echo "" >> $CHANGELOG_FILE
 REPO_URL="https://github.com/${GITHUB_REPOSITORY}/compare/"
-echo "**\n\nFull commit history:** [Compare Changes](${REPO_URL}${LATEST_TAG}...${NEW_TAG})" >> $CHANGELOG_FILE
+echo "**Full commit history:** [Compare Changes](${REPO_URL}${LATEST_TAG}...${NEW_TAG})" >> $CHANGELOG_FILE
