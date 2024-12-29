@@ -70,7 +70,7 @@ FactorioSaveGameEnableAchievements/
 
 BSD 2-Clause License
 
-Copyright (c) [year], [fullname]
+Copyright (c) {{CURRENT_YEAR}}
 
 ## 🤝 Contributing
 
