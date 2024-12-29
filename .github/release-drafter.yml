@@ -1,5 +1,6 @@
-name-template: "Release ${{ nextReleaseVersion }} 🚀"
-tag-template: "v${{ nextReleaseVersion }}"
+name-template: "Release {{ nextReleaseVersion }} 🚀"
+tag-template: "v{{ nextReleaseVersion }}"
+version-template: "{{ nextReleaseVersion }}"
 
 categories:
   - title: "🚀 Features"
@@ -22,19 +23,12 @@ change-template: "- $TITLE by @$AUTHOR in #$NUMBER"
 no-labels-merge-method: "title"
 no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/{{github.repository}}/commit/$FULL_SHA))"
 
-# Ignore changes in .github
-exclude-labels:
-  - "ignore-changelog"
-  - "skip-release"
-exclude-contributors:
-  - "github-actions[bot]"
-
 template: |
   ## What's Changed
   $CHANGES
 
   ## 📦 Full Changelog
-  repository: `{{github.repository}}`  
-  previousTag: `{{previousTag}}`  
-  currentTag: `{{currentTag}}`  
-  [Compare Changes](https://github.com/{{github.repository}}/compare/{{previousTag}}...{{currentTag}})
+  repository: `{{ github.repository }}`  
+  previousTag: `{{ previousTag | default: 'N/A' }}`  
+  currentTag: `{{ currentTag | default: 'N/A' }}`  
+  [Compare Changes](https://github.com/{{ github.repository }}/compare/{{ previousTag | default: 'N/A' }}...{{ currentTag | default: 'N/A' }})
