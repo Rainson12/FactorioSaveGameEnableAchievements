@@ -17,32 +17,39 @@ if [ "$LATEST_TAG" == "N/A" ]; then
   LATEST_TAG=""
 fi
 
-# Create or update the changelog with a professional structure
+# Start changelog structure
 {
   echo "## 🚀 Release $NEW_TAG"
   echo "### What's Changed"
   echo ""
-
-  # Append categorized commit history using prefixes (Feature:, Fix:, etc.)
+  
+  # Features Section
   echo "#### 🌟 Features"
-  git log --pretty=format:"- 🌟 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Feature:|Feature :|feat:)' || echo "- _No new features_"
+  FEATURE_COMMITS=$(git log --pretty=format:"- %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Feature:|feat:)' || echo "- *No new features*")
+  echo "$FEATURE_COMMITS"
   echo ""
   
+  # Fixes Section
   echo "#### 🐛 Fixes"
-  git log --pretty=format:"- 🛠️ %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Fix:|Fix :|bug:)' || echo "- _No bug fixes_"
+  FIX_COMMITS=$(git log --pretty=format:"- %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Fix:|bug:)' || echo "- *No bug fixes*")
+  echo "$FIX_COMMITS"
   echo ""
   
+  # Documentation Section
   echo "#### 📄 Documentation"
-  git log --pretty=format:"- 📝 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Docs:|Docs :|doc:)' || echo "- _No documentation updates_"
+  DOC_COMMITS=$(git log --pretty=format:"- %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Docs:|doc:)' || echo "- *No documentation updates*")
+  echo "$DOC_COMMITS"
   echo ""
   
+  # Maintenance Section
   echo "#### 🧰 Maintenance"
-  git log --pretty=format:"- 🔧 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Chore:|Refactor:|Maintenance:)' || echo "- _No maintenance updates_"
+  MAINTENANCE_COMMITS=$(git log --pretty=format:"- %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Chore:|Refactor:|maint:)' || echo "- *No maintenance updates*")
+  echo "$MAINTENANCE_COMMITS"
   echo ""
-  
+
   echo "---"
   
-  # Full commit history with a compare link
+  # Full commit history link
   REPO_URL="https://github.com/${GITHUB_REPOSITORY}/compare/"
   echo "**Full commit history:** [Compare Changes](${REPO_URL}${LATEST_TAG}...${NEW_TAG})"
 } > $CHANGELOG_FILE
