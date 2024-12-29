@@ -2,22 +2,26 @@
 
 This project is a console application that modifies Factorio save files to re-enable achievements that have been disabled due to the use of commands or the map editor.
 
+---
+
 ## ✨ Features
 
-- 🛠️ Automatically extracts save files.
+- 🧐 Automatically extracts save files.
 - 🔍 Locates and modifies the necessary data to re-enable achievements.
-- 🗂️ Creates a backup of the original save file.
+- 🗂 Creates a backup of the original save file.
 - 📦 Recompresses and restores the save file.
-- 🔄 Automated GitHub Releases with changelogs generated from commits and PRs.
-- 🏷️ Automatically labels and excludes changes in `.github` from release changelogs.
 
-## 📋 Requirements
+---
+
+## 🗃️ Requirements
 
 - .NET 8.0 SDK
 - Visual Studio (or any compatible C# IDE)
 - Factorio save files (.zip format)
 
-## 🛠️ How to Compile and Run
+---
+
+## 🧑‍💻 How to Compile and Run
 
 ### 1. Clone the Repository
 
@@ -40,33 +44,7 @@ dotnet run
 
 Alternatively, you can open the `.sln` file in Visual Studio and run the project using the built-in debugger.
 
-## 🚀 Automated Release Workflow
-
-This project uses **GitHub Actions** to automate the release process.
-
-### How it Works
-
-- **Triggers**: A new release is automatically created when a tag is pushed (e.g., `v2.0.28-1.0`).
-- **Draft Releases**: The changelog is generated dynamically from PRs and commits.
-- **Manual Trigger**: Releases can also be triggered manually from the Actions tab.
-- **Tag Generation**: Tags are automatically generated with incremental versions based on the game version (e.g., `2.0.28-1.0`, `2.0.28-1.1`).
-- **Label Exclusion**: Changes in `.github` are automatically labeled as `ignore-changelog` and excluded from release notes.
-
-### Key Files
-
-- `.github/workflows/release-windows-dotnet.yml` – Workflow to build and release .NET projects.
-- `.github/release-drafter.yml` – Template for changelog generation.
-
-### Create a Tag to Trigger a Release
-
-```bash
-git tag v2.0.28-1.0
-git push origin v2.0.28-1.0
-```
-
-### Manual Release
-
-Go to **Actions** → Select the workflow → **Run Workflow**.
+---
 
 ## 🕹️ How to Use
 
@@ -74,6 +52,8 @@ Go to **Actions** → Select the workflow → **Run Workflow**.
 2. When prompted, enter the path to the Factorio save file you wish to modify (e.g., `C:\Users\Username\AppData\Roaming\Factorio\saves\mysave.zip`).
 3. The program will extract, modify, and repack the save file.
 4. A backup of the original save will be created with the `.bak` extension.
+
+---
 
 ## 📁 Project Structure
 
@@ -83,26 +63,100 @@ FactorioSaveGameEnableAchievements/
 ├── FactorioSaveGameEnableAchievements.sln   # Solution file
 ├── Program.cs                                # Main application logic
 ├── FileProcessor.cs                          # Handles ZLib compression and decompression
-├── .github/workflows/release-windows-dotnet.yml # GitHub Actions workflow for releases
-├── .github/release-drafter.yml               # Release drafter configuration
+├── .github/                                  # GitHub Actions workflows
+│   ├── release-windows-dotnet.yml            # Workflow for automated releases
+│   └── release-drafter.yml                   # Configuration for changelog generation
 └── README.md                                 # Project documentation
 ```
+
+---
+
+## 📊 Automated Release Process
+
+### ✅ How Releases Work
+
+- **Automatic Changelog Generation**:  
+  Every time you push a commit to `master`, a GitHub Action workflow automatically generates a changelog based on the commit messages.
+- **Versioning**:  
+  The project uses semantic versioning based on the format:
+
+  ```
+  GameVersion-PatchVersion (e.g., 2.0.28-1.1)
+  ```
+
+- **New Tag and Release**:  
+  A new GitHub release is created with the changelog and the compiled executable `.zip`.
+
+---
+
+### 🔧 How to Format Commits (For Changelog)
+
+To ensure the changelog is well-organized, follow this commit message format:
+
+```bash
+git commit -m "Feature: Add new gameplay mechanic"
+git commit -m "Fix: Resolve crash on save file load"
+git commit -m "Chore: Update dependencies"
+git commit -m "Refactor: Optimize level.dat handling"
+```
+
+- **Feature:** For new additions.
+- **Fix:** For bug fixes.
+- **Chore:** For maintenance or dependency updates.
+- **Refactor:** For non-functional changes to the code.
+
+---
+
+## 📦 Full Changelog
+
+The changelog is automatically generated with every release.
+
+To view the latest changes, check the **[Releases Section](https://github.com/Rainson12/FactorioSaveGameEnableAchievements/releases)**.  
+For a full list of changes:  
+[Compare Changes](https://github.com/Rainson12/FactorioSaveGameEnableAchievements/compare)
+
+---
 
 ## ⚠️ Error Handling
 
 - ❌ If the program encounters an invalid save file path, it will notify the user and exit.
 - 🛡️ Any errors during file extraction or modification will be logged to the console.
 
+---
+
 ## 📝 Notes
 
 - ⚙️ Ensure the save file is not in use by Factorio while running this tool.
 - 🏅 This program only modifies saves that have achievements disabled by running commands or using the map editor.
-- 🏷️ Changes made to `.github/` do not appear in the release changelog to reduce noise.
+
+---
 
 ## 📄 License
 
 BSD 2-Clause License
 
+```
+Copyright (c) 2024, Rainson12
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+...
+```
+
+---
+
 ## 🤝 Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss the changes you would like to make.
+Pull requests are welcome. For major changes, please open an issue first to discuss the changes you would like to make.  
+To contribute:
+
+```bash
+git checkout -b feature/your-feature
+git commit -m "Feature: Add your feature"
+git push origin feature/your-feature
+```
+
+---
+
+## 📩 Contact
+
+For questions or issues, open an [issue](https://github.com/Rainson12/FactorioSaveGameEnableAchievements/issues) or contact directly via GitHub.

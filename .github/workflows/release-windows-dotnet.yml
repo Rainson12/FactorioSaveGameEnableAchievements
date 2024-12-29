@@ -65,12 +65,10 @@ jobs:
 
       - name: Generate Changelog
         run: |
-          echo "## What's Changed" > changelog.md
-          echo "" >> changelog.md
-          git log --pretty=format:"- %s by @%an" $LATEST_TAG..HEAD >> changelog.md
-          echo "" >> changelog.md
-          echo "## 📦 Full Changelog" >> changelog.md
-          echo "[Compare Changes](https://github.com/${{ github.repository }}/compare/$LATEST_TAG...$NEW_TAG)" >> changelog.md
+          echo "## 🚀 New Features" > changelog.md
+          git log $LATEST_TAG..HEAD --grep "Feature:" --oneline >> changelog.md
+          echo "## 🐛 Bug Fixes" >> changelog.md
+          git log $LATEST_TAG..HEAD --grep "Fix:" --oneline >> changelog.md
 
       - name: Draft Release
         id: draft_release
