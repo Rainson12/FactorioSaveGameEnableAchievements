@@ -35,27 +35,27 @@ fi
 while IFS= read -r line; do
   case "$line" in
     *"Feature:"* | *"feat:"* | *"Add:"*)
-      FEATURES+="- ${line#*: }\n"
+      FEATURES+="  - ${line#*: }\n"
       ;;
     *"Fix:"* | *"fix:"* | *"Bug:"* | *"Patch:"*)
-      FIXES+="- ${line#*: }\n"
+      FIXES+="  - ${line#*: }\n"
       ;;
     *"Update:"* | *"update:"* | *"Improvement:"*)
-      UPDATES+="- ${line#*: }\n"
+      UPDATES+="  - ${line#*: }\n"
       ;;
     *"Remove:"* | *"remove:"* | *"Delete:"*)
-      REMOVES+="- ${line#*: }\n"
+      REMOVES+="  - ${line#*: }\n"
       ;;
   esac
 done <<< "$COMMITS"
 
-# Append categorized sections
+# Append categorized sections with proper markdown
 if [ -n "$FEATURES" ]; then
   echo "🌟 **Features**" >> $CHANGELOG_FILE
   echo -e "$FEATURES" >> $CHANGELOG_FILE
 else
   echo "🌟 **Features**" >> $CHANGELOG_FILE
-  echo "- _*No new features*_ " >> $CHANGELOG_FILE
+  echo "  - _**No new features**_" >> $CHANGELOG_FILE
 fi
 
 if [ -n "$FIXES" ]; then
@@ -63,7 +63,7 @@ if [ -n "$FIXES" ]; then
   echo -e "$FIXES" >> $CHANGELOG_FILE
 else
   echo "🐛 **Fixes**" >> $CHANGELOG_FILE
-  echo "- _*No bug fixes*_ " >> $CHANGELOG_FILE
+  echo "  - _**No bug fixes**_" >> $CHANGELOG_FILE
 fi
 
 if [ -n "$UPDATES" ]; then
@@ -71,7 +71,7 @@ if [ -n "$UPDATES" ]; then
   echo -e "$UPDATES" >> $CHANGELOG_FILE
 else
   echo "🔄 **Updates**" >> $CHANGELOG_FILE
-  echo "- _*No updates*_ " >> $CHANGELOG_FILE
+  echo "  - _**No updates**_" >> $CHANGELOG_FILE
 fi
 
 if [ -n "$REMOVES" ]; then
@@ -79,7 +79,7 @@ if [ -n "$REMOVES" ]; then
   echo -e "$REMOVES" >> $CHANGELOG_FILE
 else
   echo "🗑️ **Removes**" >> $CHANGELOG_FILE
-  echo "- _*Nothing removed*_ " >> $CHANGELOG_FILE
+  echo "  - _**Nothing removed**_" >> $CHANGELOG_FILE
 fi
 
 echo "" >> $CHANGELOG_FILE
