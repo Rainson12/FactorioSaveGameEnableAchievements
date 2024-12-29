@@ -1,43 +1,49 @@
-name: Windows .NET Build and Release
+name: .NET Windows Release 🚀
 
 on:
   push:
-    branches:
-      - main  # Trigger on push to main
-  workflow_dispatch:  # Manual trigger
+    tags:
+      - '*'
 
 jobs:
-  build:
-    runs-on: windows-latest  # Use Windows environment
+  release:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'  # Adjust to your .NET version
-
-    - name: Restore Dependencies
-      run: dotnet restore
+        dotnet-version: 8.0.x
 
     - name: Build Project
-      run: dotnet publish -c Release -o publish  # Publish to 'publish' folder
+      run: dotnet build --configuration Release
 
-    - name: Zip the Artifacts
+    - name: Publish Artifacts
       run: |
-        Compress-Archive -Path publish\* -DestinationPath release.zip
+        mkdir release
+        dotnet publish -c Release -o release
 
-    - name: Upload to GitHub Releases
-      uses: softprops/action-gh-release@v1
+    - name: Create Zip Archive
+      run: |
+        zip -r release.zip release/
+
+    - name: Draft Release
+      id: draft_release
+      uses: release-drafter/release-drafter@v5
       with:
-        files: release.zip
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag_name: ${{ github.run_number }}
-        name: "Release ${{ github.run_number }}"
-        body: "Automated .NET release 🚀"
-        draft: false
-        prerelease: false
+        config-name: release-drafter.yml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish Release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ github.ref_name }}
+        name: "Release ${{ github.ref_name }}"
+        body: ${{ steps.draft_release.outputs.body }}
+        artifacts: "release.zip"
+        draft: false
+        prerelease: false
