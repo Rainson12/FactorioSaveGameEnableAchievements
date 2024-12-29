@@ -22,7 +22,7 @@ fi
 # Create or update the changelog
 echo "## 🚀 Release $NEW_TAG 🎉" > $CHANGELOG_FILE
 echo "" >> $CHANGELOG_FILE
-echo "What's Changed" >> $CHANGELOG_FILE
+echo "### What's Changed" >> $CHANGELOG_FILE
 echo "" >> $CHANGELOG_FILE
 
 # Categorize commit messages
@@ -36,28 +36,34 @@ while IFS= read -r line; do
 done < <(git log --pretty=format:"%s" $LATEST_TAG..HEAD)
 
 # Populate changelog
-echo "**🌟 Features**" >> $CHANGELOG_FILE
+echo "### 🌟 Features" >> $CHANGELOG_FILE
 if [ -n "$FEATURES" ]; then
   echo -e "$FEATURES" >> $CHANGELOG_FILE
 else
   echo "- _*No new features*_ " >> $CHANGELOG_FILE
 fi
 
-echo "**🐛 Fixes**" >> $CHANGELOG_FILE
+echo "" >> $CHANGELOG_FILE
+
+echo "### 🐛 Fixes" >> $CHANGELOG_FILE
 if [ -n "$FIXES" ]; then
   echo -e "$FIXES" >> $CHANGELOG_FILE
 else
   echo "- _*No bug fixes*_ " >> $CHANGELOG_FILE
 fi
 
-echo "**🔄 Updates**" >> $CHANGELOG_FILE
+echo "" >> $CHANGELOG_FILE
+
+echo "### 🔄 Updates" >> $CHANGELOG_FILE
 if [ -n "$UPDATES" ]; then
   echo -e "$UPDATES" >> $CHANGELOG_FILE
 else
   echo "- _*No updates*_ " >> $CHANGELOG_FILE
 fi
 
-echo "**🗑️ Removes**" >> $CHANGELOG_FILE
+echo "" >> $CHANGELOG_FILE
+
+echo "### 🗑️ Removes" >> $CHANGELOG_FILE
 if [ -n "$REMOVES" ]; then
   echo -e "$REMOVES" >> $CHANGELOG_FILE
 else
