@@ -9,6 +9,7 @@ This project is a console application that modifies Factorio save files to re-en
 - 🗂️ Creates a backup of the original save file.
 - 📦 Recompresses and restores the save file.
 - 🔄 Automated GitHub Releases with changelogs generated from commits and PRs.
+- 🏷️ Automatically labels and excludes changes in `.github` from release changelogs.
 
 ## 📋 Requirements
 
@@ -44,21 +45,27 @@ Alternatively, you can open the `.sln` file in Visual Studio and run the project
 This project uses **GitHub Actions** to automate the release process.
 
 ### How it Works
-- **Triggers**: A new release is automatically created when a tag is pushed (e.g., `v1.0.0`).
+
+- **Triggers**: A new release is automatically created when a tag is pushed (e.g., `v2.0.28-1.0`).
 - **Draft Releases**: The changelog is generated dynamically from PRs and commits.
 - **Manual Trigger**: Releases can also be triggered manually from the Actions tab.
+- **Tag Generation**: Tags are automatically generated with incremental versions based on the game version (e.g., `2.0.28-1.0`, `2.0.28-1.1`).
+- **Label Exclusion**: Changes in `.github` are automatically labeled as `ignore-changelog` and excluded from release notes.
 
-### Key Files:
+### Key Files
+
 - `.github/workflows/release-windows-dotnet.yml` – Workflow to build and release .NET projects.
 - `.github/release-drafter.yml` – Template for changelog generation.
 
-### Create a Tag to Trigger a Release:
+### Create a Tag to Trigger a Release
+
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v2.0.28-1.0
+git push origin v2.0.28-1.0
 ```
 
-### Manual Release:
+### Manual Release
+
 Go to **Actions** → Select the workflow → **Run Workflow**.
 
 ## 🕹️ How to Use
@@ -90,6 +97,7 @@ FactorioSaveGameEnableAchievements/
 
 - ⚙️ Ensure the save file is not in use by Factorio while running this tool.
 - 🏅 This program only modifies saves that have achievements disabled by running commands or using the map editor.
+- 🏷️ Changes made to `.github/` do not appear in the release changelog to reduce noise.
 
 ## 📄 License
 
@@ -98,4 +106,3 @@ BSD 2-Clause License
 ## 🤝 Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss the changes you would like to make.
-

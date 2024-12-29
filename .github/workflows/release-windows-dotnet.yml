@@ -4,95 +4,95 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:  # Allows manual execution
+  workflow_dispatch: # Allows manual execution
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Fetch all existing tags
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch all existing tags
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
 
-    - name: Build Project
-      run: dotnet build --configuration Release
+      - name: Build Project
+        run: dotnet build --configuration Release
 
-    - name: Publish Artifacts
-      run: |
-        mkdir release
-        dotnet publish -c Release -o release
+      - name: Publish Artifacts
+        run: |
+          mkdir release
+          dotnet publish -c Release -o release
 
-    - name: Create Zip Archive
-      run: zip -r release.zip release/
+      - name: Create Zip Archive
+        run: zip -r release.zip release/
 
-    # Detect changes in the .github directory
-    - name: Check for .github changes
-      id: changes
-      run: |
-        if git diff --name-only HEAD^ | grep '^\.github/'; then
-          echo "changes_in_github=true" >> $GITHUB_ENV
-        else
-          echo "changes_in_github=false" >> $GITHUB_ENV
-        fi
+      # Detect changes in the .github directory
+      - name: Check for .github changes
+        id: changes
+        run: |
+          if git diff --name-only HEAD^ | grep '^\.github/'; then
+            echo "changes_in_github=true" >> $GITHUB_ENV
+          else
+            echo "changes_in_github=false" >> $GITHUB_ENV
+          fi
 
-    # Apply label if changes are detected in .github
-    - name: Label PR with ignore-changelog
-      if: env.changes_in_github == 'true' && github.event_name == 'pull_request'
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { owner, repo } = context.repo;
-          const pr = context.payload.pull_request;
-          if (pr) {
-            github.rest.issues.addLabels({
-              owner,
-              repo,
-              issue_number: pr.number,
-              labels: ['ignore-changelog']
-            });
-          }
+      # Apply label if changes are detected in .github
+      - name: Label PR with ignore-changelog
+        if: env.changes_in_github == 'true' && github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const pr = context.payload.pull_request;
+            if (pr) {
+              github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: pr.number,
+                labels: ['ignore-changelog']
+              });
+            }
 
-    - name: Generate Version Tag
-      id: tag
-      run: |
-        GAME_VERSION="2.0.28"
-        LATEST_TAG=$(git tag --sort=-v:refname | grep "^${GAME_VERSION}-" | head -n 1)
-        
-        if [ -z "$LATEST_TAG" ]; then
-          NEW_TAG="${GAME_VERSION}-1.0"
-        else
-          LAST_VERSION=$(echo $LATEST_TAG | awk -F '-' '{print $2}')
-          NEW_VERSION=$(echo "$LAST_VERSION + 0.1" | bc)
-          NEW_TAG="${GAME_VERSION}-$(printf %.1f $NEW_VERSION)"
-        fi
+      - name: Generate Version Tag
+        id: tag
+        run: |
+          GAME_VERSION="2.0.28"
+          LATEST_TAG=$(git tag --sort=-v:refname | grep "^${GAME_VERSION}-" | head -n 1)
 
-        echo "NEW_TAG=$NEW_TAG"
-        git tag $NEW_TAG
-        git push origin $NEW_TAG
-        echo "tag=$NEW_TAG" >> $GITHUB_ENV
+          if [ -z "$LATEST_TAG" ]; then
+            NEW_TAG="${GAME_VERSION}-1.0"
+          else
+            LAST_VERSION=$(echo $LATEST_TAG | awk -F '-' '{print $2}')
+            NEW_VERSION=$(echo "$LAST_VERSION + 0.1" | bc)
+            NEW_TAG="${GAME_VERSION}-$(printf %.1f $NEW_VERSION)"
+          fi
 
-    - name: Draft Release
-      id: draft_release
-      uses: release-drafter/release-drafter@v5
-      with:
-        config-name: release-drafter.yml
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "NEW_TAG=$NEW_TAG"
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+          echo "tag=$NEW_TAG" >> $GITHUB_ENV
 
-    - name: Publish Release
-      uses: ncipollo/release-action@v1
-      with:
-        tag: ${{ env.tag }}
-        name: "Release ${{ env.tag }}"
-        body: ${{ steps.draft_release.outputs.body }}
-        artifacts: "release.zip"
-        draft: false
-        prerelease: false
+      - name: Draft Release
+        id: draft_release
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.tag }}
+          name: "Release ${{ env.tag }}"
+          body: ${{ steps.draft_release.outputs.body }}
+          artifacts: "release.zip"
+          draft: false
+          prerelease: false
