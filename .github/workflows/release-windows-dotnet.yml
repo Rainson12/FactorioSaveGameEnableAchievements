@@ -36,9 +36,9 @@ jobs:
       # Create Zip Archive with Version in Name
       - name: Create Zip Archive
         run: |
-          ZIP_NAME="release-${{ env.current_tag }}.zip"
-          zip -r $ZIP_NAME release/
-          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          mkdir -p release
+          dotnet publish ./FactorioSaveGameEnableAchievements/FactorioSaveGameEnableAchievements.csproj -c Release -o release
+          zip -r "release-${{ env.current_tag }}.zip" release/
 
       # Set Git Identity for Tagging
       - name: Set Git Identity
