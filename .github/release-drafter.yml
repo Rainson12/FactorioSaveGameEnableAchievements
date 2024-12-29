@@ -8,7 +8,7 @@ categories:
   - title: "🐛 Bug Fixes"
     labels:
       - "fix"
-  - title: "🛠️ Maintenance"
+  - title: "🧩 Maintenance"
     labels:
       - "chore"
       - "refactor"

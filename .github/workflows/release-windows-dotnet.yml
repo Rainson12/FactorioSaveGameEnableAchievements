@@ -36,11 +36,13 @@ jobs:
       - name: Create Zip Archive
         run: zip -r release.zip release/
 
+      # Set Git Identity for Tagging
       - name: Set Git Identity
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
+      # Generate Tags Automatically
       - name: Generate Version Tag
         id: tag
         run: |
@@ -65,34 +67,38 @@ jobs:
           echo "::set-output name=previous_tag::$LATEST_TAG"
           echo "::set-output name=current_tag::$NEW_TAG"
 
+      # Grant Execute Permissions for the Script
       - name: Grant execute permissions to the script
         run: chmod +x .github/scripts/generate-changelog.sh
 
+      # Run Changelog Generation Script
       - name: Generate Changelog from Script
         run: ./.github/scripts/generate-changelog.sh
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
+      # Read Changelog Content into Environment Variable
       - name: Read Changelog
         run: |
           echo "CHANGELOG<<EOF" >> $GITHUB_ENV
           cat CHANGELOG.md >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
+      # Draft the Release with Changelog
       - name: Draft Release
         id: draft_release
         uses: release-drafter/release-drafter@v5
         with:
           config-name: release-drafter.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Publish the Release
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.current_tag }}
-          name: "Release ${{ env.current_tag }}"
+          name: "Release ${{ env.current_tag }} 🚀"
           body: ${{ env.CHANGELOG }}
           artifacts: "release.zip"
           draft: false
