@@ -25,15 +25,18 @@ echo "" >> $CHANGELOG_FILE
 echo "### What's Changed" >> $CHANGELOG_FILE
 echo "" >> $CHANGELOG_FILE
 
-# Categorize commit messages based on the prefix
-while IFS= read -r line; do
-  case $line in
-    "Feature:"*) FEATURES+="- ${line#*: }\n" ;;
-    "Fix:"*) FIXES+="- ${line#*: }\n" ;;
-    "Update:"*) UPDATES+="- ${line#*: }\n" ;;
-    "Remove:"*) REMOVES+="- ${line#*: }\n" ;;
-  esac
-done < <(git log --pretty=format:"%s" $LATEST_TAG..HEAD)
+# Log commits and classify by prefix
+git log --pretty=format:"%s" $LATEST_TAG..HEAD | while read -r line; do
+  if [[ $line == Feature:* ]]; then
+    FEATURES+="- ${line#Feature: }\n"
+  elif [[ $line == Fix:* ]]; then
+    FIXES+="- ${line#Fix: }\n"
+  elif [[ $line == Update:* ]]; then
+    UPDATES+="- ${line#Update: }\n"
+  elif [[ $line == Remove:* ]]; then
+    REMOVES+="- ${line#Remove: }\n"
+  fi
+done
 
 # Populate changelog with fallback if sections are empty
 echo "### 🌟 Features" >> $CHANGELOG_FILE
