@@ -97,13 +97,13 @@ To ensure the changelog is well-organized, follow this commit message format:
 git commit -m "Feature: Add new gameplay mechanic"
 git commit -m "Fix: Resolve crash on save file load"
 git commit -m "Chore: Update dependencies"
-git commit -m "Refactor: Optimize level.dat handling"
+git commit -m "Docs: Optimize level.dat handling"
 ```
 
 - **Feature:** For new additions.
 - **Fix:** For bug fixes.
 - **Chore:** For maintenance or dependency updates.
-- **Refactor:** For non-functional changes to the code.
+- **Docs:** For non-functional changes to the code.
 
 ---
 
