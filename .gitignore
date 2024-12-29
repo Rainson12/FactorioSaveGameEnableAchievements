@@ -363,4 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Removed README.md
+(?i)readme.md
 README.md
