@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +11,7 @@ using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
 using System.Collections;
 
-namespace FactorioSaveGameEnableAchivements
+namespace FactorioSaveGameEnableAchievements
 {
     public class FileProcessor
     {
