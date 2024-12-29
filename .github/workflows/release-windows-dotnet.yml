@@ -10,6 +10,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
+    outputs:
+      previous_tag: ${{ steps.tag.outputs.previous_tag }}
+      current_tag: ${{ steps.tag.outputs.current_tag }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -31,34 +35,6 @@ jobs:
 
       - name: Create Zip Archive
         run: zip -r release.zip release/
-
-      # Detecta mudanças na pasta .github
-      - name: Check for .github changes
-        id: changes
-        run: |
-          if git diff --name-only HEAD^ | grep '^\.github/'; then
-            echo "changes_in_github=true" >> $GITHUB_ENV
-          else
-            echo "changes_in_github=false" >> $GITHUB_ENV
-          fi
-
-      # Adiciona label se houver mudanças em .github
-      - name: Label PR with ignore-changelog
-        if: env.changes_in_github == 'true' && github.event_name == 'pull_request'
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { owner, repo } = context.repo;
-            const pr = context.payload.pull_request;
-            if (pr) {
-              github.rest.issues.addLabels({
-                owner,
-                repo,
-                issue_number: pr.number,
-                labels: ['ignore-changelog']
-              });
-            }
 
       - name: Set Git Identity
         run: |
@@ -84,7 +60,8 @@ jobs:
 
           echo "previous_tag=$LATEST_TAG" >> $GITHUB_ENV
           echo "current_tag=$NEW_TAG" >> $GITHUB_ENV
-          echo "tag=$NEW_TAG" >> $GITHUB_ENV
+          echo "::set-output name=previous_tag::$LATEST_TAG"
+          echo "::set-output name=current_tag::$NEW_TAG"
 
       - name: Draft Release
         id: draft_release
@@ -93,14 +70,14 @@ jobs:
           config-name: release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PREVIOUS_TAG: ${{ env.previous_tag }}
-          CURRENT_TAG: ${{ env.current_tag }}
+          PREVIOUS_TAG: ${{ steps.tag.outputs.previous_tag }}
+          CURRENT_TAG: ${{ steps.tag.outputs.current_tag }}
 
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ env.tag }}
-          name: "Release ${{ env.tag }}"
+          tag: ${{ env.current_tag }}
+          name: "Release ${{ env.current_tag }}"
           body: ${{ steps.draft_release.outputs.body }}
           artifacts: "release.zip"
           draft: false
