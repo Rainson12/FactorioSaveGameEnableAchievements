@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:  # Permite execução manual
+  workflow_dispatch:  # Allows manual execution
 
 jobs:
   release:
@@ -14,7 +14,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0  # Pega todas as tags existentes
+        fetch-depth: 0  # Fetch all existing tags
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -31,6 +31,34 @@ jobs:
 
     - name: Create Zip Archive
       run: zip -r release.zip release/
+
+    # Detect changes in the .github directory
+    - name: Check for .github changes
+      id: changes
+      run: |
+        if git diff --name-only HEAD^ | grep '^\.github/'; then
+          echo "changes_in_github=true" >> $GITHUB_ENV
+        else
+          echo "changes_in_github=false" >> $GITHUB_ENV
+        fi
+
+    # Apply label if changes are detected in .github
+    - name: Label PR with ignore-changelog
+      if: env.changes_in_github == 'true' && github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { owner, repo } = context.repo;
+          const pr = context.payload.pull_request;
+          if (pr) {
+            github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: pr.number,
+              labels: ['ignore-changelog']
+            });
+          }
 
     - name: Generate Version Tag
       id: tag
