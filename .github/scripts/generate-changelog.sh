@@ -14,66 +14,77 @@ if [ "$LATEST_TAG" == "N/A" ]; then
 fi
 
 # Create or update the changelog
-echo "## 🚀 Release $NEW_TAG" > $CHANGELOG_FILE
-echo "" >> $CHANGELOG_FILE
+echo "🚀 **Release $NEW_TAG**" > $CHANGELOG_FILE
 echo "### What's Changed" >> $CHANGELOG_FILE
 echo "" >> $CHANGELOG_FILE
 
-# Initialize categories
+# Initialize sections for each type of change
 FEATURES=""
 FIXES=""
 DOCS=""
 MAINTENANCE=""
 
-# Loop through the commits and categorize them
+# Fetch commit history and categorize
+if [ -n "$LATEST_TAG" ]; then
+  COMMITS=$(git log --pretty=format:"%s" $LATEST_TAG..HEAD)
+else
+  COMMITS=$(git log --pretty=format:"%s" HEAD)
+fi
+
+# Loop through each commit and categorize
 while IFS= read -r line; do
-  COMMIT_MESSAGE=$(echo "$line" | awk '{for(i=2;i<=NF;++i)printf $i" "; print""}')
-  AUTHOR=$(echo "$line" | awk '{print $NF}')
-  
-  if [[ "$line" == *"Feature:"* ]]; then
-    FEATURES+="🌟 $COMMIT_MESSAGE by @$AUTHOR\n"
-  elif [[ "$line" == *"Fix:"* ]]; then
-    FIXES+="🐛 $COMMIT_MESSAGE by @$AUTHOR\n"
-  elif [[ "$line" == *"Docs:"* ]]; then
-    DOCS+="📄 $COMMIT_MESSAGE by @$AUTHOR\n"
-  elif [[ "$line" == *"Chore:"* ]]; then
-    MAINTENANCE+="🧰 $COMMIT_MESSAGE by @$AUTHOR\n"
-  fi
-done < <(git log --pretty=format:"%s by %an" $LATEST_TAG..HEAD)
+  case "$line" in
+    *"Feature:"* | *"feat:"* | *"Add:"*)
+      FEATURES+="🌟 $line\n"
+      ;;
+    *"Fix:"* | *"fix:"* | *"Bug:"* | *"Patch:"*)
+      FIXES+="🐛 $line\n"
+      ;;
+    *"Doc:"* | *"docs:"* | *"Documentation:"*)
+      DOCS+="📄 $line\n"
+      ;;
+    *"Chore:"* | *"Refactor:"* | *"Maint:"* | *"Build:"*)
+      MAINTENANCE+="🧰 $line\n"
+      ;;
+    *)
+      # Catch-all if no category matches
+      MAINTENANCE+="🧰 $line\n"
+      ;;
+  esac
+done <<< "$COMMITS"
 
-# Append sections to changelog
-echo "**🌟 Features**" >> $CHANGELOG_FILE
-if [ -z "$FEATURES" ]; then
-  echo "_No new features_" >> $CHANGELOG_FILE
-else
+# Append categorized sections
+if [ -n "$FEATURES" ]; then
+  echo "🌟 **Features**" >> $CHANGELOG_FILE
   echo -e "$FEATURES" >> $CHANGELOG_FILE
-fi
-echo "" >> $CHANGELOG_FILE
-
-echo "**🐛 Fixes**" >> $CHANGELOG_FILE
-if [ -z "$FIXES" ]; then
-  echo "_No bug fixes_" >> $CHANGELOG_FILE
 else
+  echo "🌟 **Features**" >> $CHANGELOG_FILE
+  echo "_No new features_" >> $CHANGELOG_FILE
+fi
+
+if [ -n "$FIXES" ]; then
+  echo "🐛 **Fixes**" >> $CHANGELOG_FILE
   echo -e "$FIXES" >> $CHANGELOG_FILE
-fi
-echo "" >> $CHANGELOG_FILE
-
-echo "**📄 Documentation**" >> $CHANGELOG_FILE
-if [ -z "$DOCS" ]; then
-  echo "_No documentation updates_" >> $CHANGELOG_FILE
 else
+  echo "🐛 **Fixes**" >> $CHANGELOG_FILE
+  echo "_No bug fixes_" >> $CHANGELOG_FILE
+fi
+
+if [ -n "$DOCS" ]; then
+  echo "📄 **Documentation**" >> $CHANGELOG_FILE
   echo -e "$DOCS" >> $CHANGELOG_FILE
-fi
-echo "" >> $CHANGELOG_FILE
-
-echo "**🧰 Maintenance**" >> $CHANGELOG_FILE
-if [ -z "$MAINTENANCE" ]; then
-  echo "_No maintenance updates_" >> $CHANGELOG_FILE
 else
-  echo -e "$MAINTENANCE" >> $CHANGELOG_FILE
+  echo "📄 **Documentation**" >> $CHANGELOG_FILE
+  echo "_No documentation updates_" >> $CHANGELOG_FILE
 fi
-echo "" >> $CHANGELOG_FILE
 
-# Add full commit history link
-REPO_URL="https://github.com/${GITHUB_REPOSITORY}/compare/"
-echo "**Full commit history:** [Compare Changes](${REPO_URL}${LATEST_TAG}...${NEW_TAG})" >> $CHANGELOG_FILE
+if [ -n "$MAINTENANCE" ]; then
+  echo "🧰 **Maintenance**" >> $CHANGELOG_FILE
+  echo -e "$MAINTENANCE" >> $CHANGELOG_FILE
+else
+  echo "🧰 **Maintenance**" >> $CHANGELOG_FILE
+  echo "_No maintenance updates_" >> $CHANGELOG_FILE
+fi
+
+echo "" >> $CHANGELOG_FILE
+echo "**Full commit history:** [Compare Changes](https://github.com/${GITHUB_REPOSITORY}/compare/${LATEST_TAG}...${NEW_TAG})" >> $CHANGELOG_FILE
