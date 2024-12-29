@@ -1,0 +1,43 @@
+name: Windows .NET Build and Release
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to main
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  build:
+    runs-on: windows-latest  # Use Windows environment
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'  # Adjust to your .NET version
+
+    - name: Restore Dependencies
+      run: dotnet restore
+
+    - name: Build Project
+      run: dotnet publish -c Release -o publish  # Publish to 'publish' folder
+
+    - name: Zip the Artifacts
+      run: |
+        Compress-Archive -Path publish\* -DestinationPath release.zip
+
+    - name: Upload to GitHub Releases
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release.zip
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: ${{ github.run_number }}
+        name: "Release ${{ github.run_number }}"
+        body: "Automated .NET release 🚀"
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
