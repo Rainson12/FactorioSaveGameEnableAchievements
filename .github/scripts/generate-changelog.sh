@@ -51,34 +51,34 @@ done <<< "$COMMITS"
 
 # Append categorized sections with proper markdown
 if [ -n "$FEATURES" ]; then
-  echo "🌟 **Features**" >> $CHANGELOG_FILE
+  echo "### 🌟 Features" >> $CHANGELOG_FILE
   echo -e "$FEATURES" >> $CHANGELOG_FILE
 else
-  echo "🌟 **Features**" >> $CHANGELOG_FILE
+  echo "### 🌟 Features" >> $CHANGELOG_FILE
   echo "  - _**No new features**_" >> $CHANGELOG_FILE
 fi
 
 if [ -n "$FIXES" ]; then
-  echo "🐛 **Fixes**" >> $CHANGELOG_FILE
+  echo "### 🐛 Fixes" >> $CHANGELOG_FILE
   echo -e "$FIXES" >> $CHANGELOG_FILE
 else
-  echo "🐛 **Fixes**" >> $CHANGELOG_FILE
+  echo "### 🐛 Fixes" >> $CHANGELOG_FILE
   echo "  - _**No bug fixes**_" >> $CHANGELOG_FILE
 fi
 
 if [ -n "$UPDATES" ]; then
-  echo "🔄 **Updates**" >> $CHANGELOG_FILE
+  echo "### 🔄 Updates" >> $CHANGELOG_FILE
   echo -e "$UPDATES" >> $CHANGELOG_FILE
 else
-  echo "🔄 **Updates**" >> $CHANGELOG_FILE
+  echo "### 🔄 Updates" >> $CHANGELOG_FILE
   echo "  - _**No updates**_" >> $CHANGELOG_FILE
 fi
 
 if [ -n "$REMOVES" ]; then
-  echo "🗑️ **Removes**" >> $CHANGELOG_FILE
+  echo "### 🗑️ Removes" >> $CHANGELOG_FILE
   echo -e "$REMOVES" >> $CHANGELOG_FILE
 else
-  echo "🗑️ **Removes**" >> $CHANGELOG_FILE
+  echo "### 🗑️ Removes" >> $CHANGELOG_FILE
   echo "  - _**Nothing removed**_" >> $CHANGELOG_FILE
 fi
 
