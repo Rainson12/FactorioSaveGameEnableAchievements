@@ -25,19 +25,19 @@ fi
 
   # Append categorized commit history using prefixes (Feature:, Fix:, etc.)
   echo "#### 🌟 Features"
-  git log --pretty=format:"- ✨ %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -i '^Feature:' | sed 's/Feature: //g' || echo "- _No new features_"
+  git log --pretty=format:"- 🌟 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Feature:|Feature :|feat:)' || echo "- _No new features_"
   echo ""
   
   echo "#### 🐛 Fixes"
-  git log --pretty=format:"- 🛠️ %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -i '^Fix:' | sed 's/Fix: //g' || echo "- _No bug fixes_"
+  git log --pretty=format:"- 🛠️ %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Fix:|Fix :|bug:)' || echo "- _No bug fixes_"
   echo ""
   
   echo "#### 📄 Documentation"
-  git log --pretty=format:"- 📝 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -i '^Docs:' | sed 's/Docs: //g' || echo "- _No documentation updates_"
+  git log --pretty=format:"- 📝 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Docs:|Docs :|doc:)' || echo "- _No documentation updates_"
   echo ""
   
   echo "#### 🧰 Maintenance"
-  git log --pretty=format:"- 🔧 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -i '^Chore:\|^Refactor:' | sed 's/Chore: //g; s/Refactor: //g' || echo "- _No maintenance updates_"
+  git log --pretty=format:"- 🔧 %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD | grep -Ei '^(Chore:|Refactor:|Maintenance:)' || echo "- _No maintenance updates_"
   echo ""
   
   echo "---"

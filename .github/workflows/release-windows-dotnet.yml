@@ -83,15 +83,6 @@ jobs:
         run: echo "CHANGELOG<<EOF" >> $GITHUB_ENV && cat CHANGELOG.md >> $GITHUB_ENV && echo "EOF" >> $GITHUB_ENV
 
       # Draft the Release with Changelog
-      - name: Draft Release
-        id: draft_release
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Publish the Release
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
