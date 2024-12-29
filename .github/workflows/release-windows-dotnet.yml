@@ -88,14 +88,6 @@ jobs:
       - name: Read Changelog
         run: echo "CHANGELOG<<EOF" >> $GITHUB_ENV && cat CHANGELOG.md >> $GITHUB_ENV && echo "EOF" >> $GITHUB_ENV
 
-      # Update README Badge
-      - name: Update README Badge
-        run: |
-          BADGE="[![.NET Windows Release 🚀](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml/badge.svg)](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml)"
-          sed -i "/Release Status Badge/c\\$BADGE" README.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # Draft the Release with Changelog
       - name: Draft Release
         id: draft_release
