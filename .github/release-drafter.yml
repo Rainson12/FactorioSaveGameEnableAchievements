@@ -1,11 +1,11 @@
-name-template: "Release ${{ nextReleaseVersion }} 🚀"
+name-template: "Release ${{ nextReleaseVersion }} 🎉"
 tag-template: "v${{ nextReleaseVersion }}"
 
 categories:
   - title: "🌟 Features"
     labels:
       - "feature"
-  - title: "🐛 Bug Fixes"
+  - title: "🐛 Fixes"
     labels:
       - "fix"
   - title: "📄 Documentation"
@@ -16,12 +16,12 @@ categories:
       - "chore"
       - "refactor"
 
-change-template: "- $TITLE by @$AUTHOR"
+change-template: "- $TITLE by @$AUTHOR in #$NUMBER"
 no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/${{ github.repository }}/commit/$FULL_SHA))"
 
 template: |
-  ## What's Changed
+  🚀 **Release ${{ nextReleaseVersion }}**  
+  ### What's Changed
   $CHANGES
-
   ---
-  **Full commit history:** [Compare Changes](https://github.com/${{ github.repository }}/compare/${{ previousTag | default: 'N/A' }}...${{ currentTag | default: 'N/A' }})
+  **Full commit history:** [Compare Changes](https://github.com/${{ github.repository }}/compare/${{ previousTag }}...${{ currentTag }})
