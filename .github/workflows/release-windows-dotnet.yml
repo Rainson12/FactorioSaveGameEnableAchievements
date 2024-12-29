@@ -41,6 +41,7 @@ jobs:
           ZIP_NAME="FactorioSaveGameEnableAchievements-${{ env.current_tag || '2.0.28-1.0' }}.zip"
           echo "Creating zip archive: $ZIP_NAME"
           zip -r $ZIP_NAME release/
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
       # Set Git Identity for Tagging
       - name: Set Git Identity
