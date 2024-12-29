@@ -3,12 +3,13 @@ name: .NET Windows Release 🚀
 on:
   push:
     tags:
-      - '*'
+      - 'v*'  # Trigger for tags starting with 'v' (e.g., v1.0.0)
+  workflow_dispatch:  # Allows manual execution from the GitHub Actions tab
 
 jobs:
   release:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
