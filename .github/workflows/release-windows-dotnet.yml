@@ -74,14 +74,31 @@ jobs:
       # Run Changelog Generation Script
       - name: Generate Changelog from Script
         run: ./.github/scripts/generate-changelog.sh
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          LATEST_TAG: ${{ steps.tag.outputs.previous_tag }}
+          NEW_TAG: ${{ steps.tag.outputs.current_tag }}
 
-      # Publish the Release using changelog.md directly
+      # Read Changelog Content into Environment Variable
+      - name: Read Changelog
+        run: echo "CHANGELOG=$(cat CHANGELOG.md)" >> $GITHUB_ENV
+
+      # Draft the Release with Changelog
+      - name: Draft Release
+        id: draft_release
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Publish the Release
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.current_tag }}
           name: "Release ${{ env.current_tag }}"
-          body_path: ./CHANGELOG.md
+          body: ${{ env.CHANGELOG }}
           artifacts: "release.zip"
           draft: false
           prerelease: false
