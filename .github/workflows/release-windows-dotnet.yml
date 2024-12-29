@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # Ensures all tags are fetched
+          fetch-depth: 0 # Fetch all existing tags
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -31,15 +31,6 @@ jobs:
 
       - name: Create Zip Archive
         run: zip -r release.zip release/
-
-      # Grant execute permission to the changelog script
-      - name: Give Execution Permission to Script
-        run: chmod +x .github/scripts/generate-changelog.sh
-
-      # Run the script to generate changelog
-      - name: Generate Changelog
-        run: |
-          .github/scripts/generate-changelog.sh
 
       # Set Git user identity to avoid committer identity issues
       - name: Set Git User Identity
@@ -79,7 +70,7 @@ jobs:
         with:
           tag: ${{ env.tag }}
           name: "Release ${{ env.tag }}"
-          body_path: ./changelog.md # Uses the generated changelog
+          body_path: ./changelog.md
           artifacts: "release.zip"
-          draft: false
+          draft: false # Ensure release is published, not draft
           prerelease: false

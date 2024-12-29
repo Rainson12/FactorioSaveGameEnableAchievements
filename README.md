@@ -49,7 +49,7 @@ Alternatively, you can open the `.sln` file in Visual Studio and run the project
 ## 🕹️ How to Use
 
 1. Run the application.
-2. When prompted, enter the path to the Factorio save file you wish to modify (e.g., `C:\Users\Username\AppData\Roaming\Factorio\saves\mysave.zip`).
+2. When prompted, enter the path to the Factorio save file you wish to modify (e.g., `%appdata%\Factorio\saves\MyFactorioSave.zip`).
 3. The program will extract, modify, and repack the save file.
 4. A backup of the original save will be created with the `.bak` extension.
 
