@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Fetch all tags for accurate tagging
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -63,12 +63,19 @@ jobs:
           echo "::set-output name=previous_tag::$LATEST_TAG"
           echo "::set-output name=current_tag::$NEW_TAG"
 
-      - name: Generate Changelog
-        run: |
-          echo "## What's Changed" > changelog.md
-          echo "" >> changelog.md
-          git log --pretty=format:"- %s by @%an" $LATEST_TAG..HEAD >> changelog.md
-          echo "" >> changelog.md
+      - name: Grant execute permissions to the script
+        run: chmod +x .github/scripts/generate-changelog.sh
+
+      - name: Generate Changelog from Script
+        run: ./.github/scripts/generate-changelog.sh
+
+      - name: Draft Release
+        id: draft_release
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Release
         uses: ncipollo/release-action@v1
