@@ -2,7 +2,7 @@ name-template: "Release ${{ nextReleaseVersion }} 🚀"
 tag-template: "v${{ nextReleaseVersion }}"
 
 categories:
-  - title: "🚀 Features"
+  - title: "🌟 Features"
     labels:
       - "feature"
   - title: "🐛 Bug Fixes"
