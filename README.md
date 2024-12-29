@@ -2,7 +2,7 @@
 
 This project is a console application that modifies Factorio save files to re-enable achievements that have been disabled due to the use of commands or the map editor.
 
-[![.NET Windows Release 🚀](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml/badge.svg)](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml)
+[![.NET Windows Release 🚀](https://github.com/louanfontenele/FactorioSaveGameEnableAchievements/actions/workflows/release-windows-dotnet.yml/badge.svg)](https://github.com/louanfontenele/FactorioSaveGameEnableAchievements/actions/workflows/release-windows-dotnet.yml)
 
 ---
 
@@ -28,7 +28,7 @@ This project is a console application that modifies Factorio save files to re-en
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/${{ github.repository }}
+git clone https://github.com/louanfontenele/FactorioSaveGameEnableAchievements
 cd FactorioSaveGameEnableAchievements
 ```
 
@@ -144,7 +144,7 @@ For a full list of changes:\
 BSD 2-Clause License
 
 ```
-Copyright (c) 2024, ${{ github.repository_owner }}
+Copyright (c) 2024, louanfontenele
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 ...
