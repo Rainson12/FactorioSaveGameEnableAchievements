@@ -81,7 +81,10 @@ jobs:
 
       # Read Changelog Content into Environment Variable
       - name: Read Changelog
-        run: echo "CHANGELOG=$(cat CHANGELOG.md)" >> $GITHUB_ENV
+        run: |
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          cat CHANGELOG.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       # Draft the Release with Changelog
       - name: Draft Release
