@@ -90,7 +90,7 @@ FactorioSaveGameEnableAchievements/
   The generated zip will follow the format:
 
   ```
-  release-<version>.zip (e.g., release-2.0.28-1.0.zip)
+  release-<master>.zip (e.g., release-2.0.28-1.0.zip)
   ```
 
 ---
@@ -117,15 +117,15 @@ git commit -m "Remove: Deprecated feature"
 
 The changelog is automatically generated with every release.
 
-To view the latest changes, check the **[Releases Section](<https://github.com/${{> github.repository }}/releases)**.\
+To view the latest changes, check the **[Releases Section](<https://github.com/louanfontenele/FactorioSaveGameEnableAchievements/releases)**.\
 For a full list of changes:\
-[Compare Changes](<https://github.com/${{> github.repository }}/compare)
+[Compare Changes](<https://github.com/louanfontenele/FactorioSaveGameEnableAchievements/compare)
 
 ---
 
 ## 📊 Status
 
-[![.NET Windows Release 🚀](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml/badge.svg)](https://github.com/${{ github.repository }}/actions/workflows/release-windows-dotnet.yml)
+[![.NET Windows Release 🚀](https://github.com/louanfontenele/FactorioSaveGameEnableAchievements/actions/workflows/release-windows-dotnet.yml)
 
 ---
 
