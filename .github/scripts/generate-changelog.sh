@@ -1,14 +1,19 @@
 #!/bin/bash
 
-# Get previous and current tags
-LATEST_TAG=$(git tag --sort=-v:refname | grep "^2.0.28-" | head -n 1)
-NEW_TAG=$(echo "$LATEST_TAG" | awk -F '-' '{printf "%s-%0.1f", $1, $2 + 0.1}')
+# Define the changelog file path
+CHANGELOG_FILE="CHANGELOG.md"
 
-# Generate the changelog content
-echo "## What's Changed" > changelog.md
-echo "" >> changelog.md
-git log --pretty=format:"- %s by @%an" $LATEST_TAG..HEAD >> changelog.md
-echo "" >> changelog.md
+# Retrieve the latest tag and the current tag from environment variables
+LATEST_TAG=${previous_tag:-"N/A"}
+NEW_TAG=${current_tag:-"N/A"}
 
-# Append Full commit history section
-echo "**Full commit history:** [Compare Changes](https://github.com/${GITHUB_REPOSITORY}/compare/$LATEST_TAG...$NEW_TAG)" >> changelog.md
+# Create or update the changelog
+echo "## Release $NEW_TAG" > $CHANGELOG_FILE
+echo "What's Changed" >> $CHANGELOG_FILE
+echo "" >> $CHANGELOG_FILE
+
+# Format the commit history nicely
+git log --pretty=format:"- %s by @%an" $LATEST_TAG..HEAD >> $CHANGELOG_FILE
+echo "" >> $CHANGELOG_FILE
+
+echo "**Full commit history:** [Compare Changes](https://github.com/${{ github.repository }}/compare/$LATEST_TAG...$NEW_TAG)" >> $CHANGELOG_FILE

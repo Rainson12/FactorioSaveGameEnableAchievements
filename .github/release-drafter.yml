@@ -1,6 +1,5 @@
 name-template: "Release ${{ nextReleaseVersion }} 🚀"
 tag-template: "v${{ nextReleaseVersion }}"
-version-template: ${{ nextReleaseVersion }}
 
 categories:
   - title: "🚀 Features"
@@ -8,7 +7,7 @@ categories:
       - "feature"
   - title: "🐛 Bug Fixes"
     labels:
-      - "bug"
+      - "fix"
   - title: "🛠️ Maintenance"
     labels:
       - "chore"
@@ -18,14 +17,8 @@ categories:
       - "dependencies"
 
 change-template: "- $TITLE by @$AUTHOR in #$NUMBER"
-
-# Capture direct commits (without PR)
-no-labels-merge-method: "title"
-no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/{{github.repository}}/commit/$FULL_SHA))"
+no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/${{ github.repository }}/commit/$FULL_SHA))"
 
 template: |
   ## What's Changed
   $CHANGES
-
-  ## Contributors
-  $CONTRIBUTORS

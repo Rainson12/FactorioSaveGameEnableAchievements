@@ -81,7 +81,7 @@ jobs:
         with:
           tag: ${{ env.current_tag }}
           name: "Release ${{ env.current_tag }}"
-          body_path: ./changelog.md # Use the changelog file directly
+          body_path: ./CHANGELOG.md
           artifacts: "release.zip"
           draft: false
           prerelease: false
