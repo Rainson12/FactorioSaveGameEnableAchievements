@@ -4,10 +4,14 @@
 CHANGELOG_FILE="CHANGELOG.md"
 
 # Retrieve the latest tag and the current tag from environment variables
-LATEST_TAG=${LATEST_TAG:-"N/A"}
-NEW_TAG=${NEW_TAG:-"N/A"}
+LATEST_TAG=${previous_tag:-"N/A"}
+NEW_TAG=${current_tag:-"N/A"}
 
-# Check if the latest tag exists, otherwise initialize
+# Fetch GitHub username using GitHub API
+GITHUB_USERNAME=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+  "https://api.github.com/users/$(git config user.email | cut -d'@' -f1)" | jq -r .login)
+
+# Initialize changelog
 if [ "$LATEST_TAG" == "N/A" ]; then
   echo "No previous tag found. Initial release."
   LATEST_TAG=""
@@ -18,14 +22,13 @@ echo "## Release $NEW_TAG" > $CHANGELOG_FILE
 echo "What's Changed" >> $CHANGELOG_FILE
 echo "" >> $CHANGELOG_FILE
 
-# Append commit history if LATEST_TAG exists
+# Append commit history
 if [ -n "$LATEST_TAG" ]; then
-  git log --pretty=format:"- %s by @%ae" $LATEST_TAG..HEAD >> $CHANGELOG_FILE
+  git log --pretty=format:"- %s by @$GITHUB_USERNAME" $LATEST_TAG..HEAD >> $CHANGELOG_FILE
 else
-  git log --pretty=format:"- %s by @%ae" HEAD >> $CHANGELOG_FILE
+  git log --pretty=format:"- %s by @$GITHUB_USERNAME" HEAD >> $CHANGELOG_FILE
 fi
-echo "" >> $CHANGELOG_FILE
 
-# Fix GitHub variable substitution
+echo "" >> $CHANGELOG_FILE
 REPO_URL="https://github.com/${GITHUB_REPOSITORY}/compare/"
 echo "**Full commit history:** [Compare Changes](${REPO_URL}${LATEST_TAG}...${NEW_TAG})" >> $CHANGELOG_FILE

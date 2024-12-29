@@ -76,15 +76,11 @@ jobs:
         run: ./.github/scripts/generate-changelog.sh
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          LATEST_TAG: ${{ steps.tag.outputs.previous_tag }}
-          NEW_TAG: ${{ steps.tag.outputs.current_tag }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       # Read Changelog Content into Environment Variable
       - name: Read Changelog
-        run: |
-          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          cat CHANGELOG.md >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+        run: echo "CHANGELOG=$(cat CHANGELOG.md)" >> $GITHUB_ENV
 
       # Draft the Release with Changelog
       - name: Draft Release
@@ -93,7 +89,7 @@ jobs:
         with:
           config-name: release-drafter.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       # Publish the Release
       - name: Publish Release
