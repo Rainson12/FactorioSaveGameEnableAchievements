@@ -75,7 +75,7 @@ jobs:
           fi
 
           echo "NEW_TAG=$NEW_TAG"
-          git tag $NEW_TAG
+          git tag -a $NEW_TAG -m "Release $NEW_TAG"
           git push origin $NEW_TAG
           echo "tag=$NEW_TAG" >> $GITHUB_ENV
 
