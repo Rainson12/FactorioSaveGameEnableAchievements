@@ -19,6 +19,9 @@ jobs:
           echo "GITHUB_REPOSITORY=${{ github.repository }}" >> $GITHUB_ENV
           echo "GITHUB_REPOSITORY_OWNER=${{ github.repository_owner }}" >> $GITHUB_ENV
 
+      - name: Grant Execute Permission to Script
+        run: chmod +x .github/scripts/generate-readme.sh
+
       - name: Generate README
         run: .github/scripts/generate-readme.sh
 
