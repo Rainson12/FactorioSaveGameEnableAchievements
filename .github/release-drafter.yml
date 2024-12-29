@@ -25,9 +25,3 @@ no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/${{ git
 template: |
   ## What's Changed
   $CHANGES
-
-  ## 📦 Full Changelog
-  repository: `${{ github.repository }}`  
-  previousTag: `${{ github.event.workflow_run.outputs.previous_tag | default: 'N/A' }}`  
-  currentTag: `${{ github.event.workflow_run.outputs.current_tag | default: 'N/A' }}`  
-  [Compare Changes](https://github.com/${{ github.repository }}/compare/${{ github.event.workflow_run.outputs.previous_tag | default: 'N/A' }}...${{ github.event.workflow_run.outputs.current_tag | default: 'N/A' }})
