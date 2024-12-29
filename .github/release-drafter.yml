@@ -34,4 +34,7 @@ template: |
   $CHANGES
 
   ## 📦 Full Changelog
+  repository: `{{github.repository}}`  
+  previousTag: `{{previousTag}}`  
+  currentTag: `{{currentTag}}`  
   [Compare Changes](https://github.com/{{github.repository}}/compare/{{previousTag}}...{{currentTag}})
