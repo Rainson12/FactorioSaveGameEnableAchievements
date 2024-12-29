@@ -47,7 +47,7 @@ jobs:
         id: tag
         run: |
           GAME_VERSION="2.0.28"
-          LATEST_TAG=$(git tag --sort=-v:refname | grep "^${GAME_VERSION}-" | head -n 1 || echo "")
+          LATEST_TAG=$(git tag --sort=-v:refname | grep "^${GAME_VERSION}-" | head -n 1)
 
           if [ -z "$LATEST_TAG" ]; then
             NEW_TAG="${GAME_VERSION}-1.0"
@@ -64,8 +64,8 @@ jobs:
 
           echo "previous_tag=$LATEST_TAG" >> $GITHUB_ENV
           echo "current_tag=$NEW_TAG" >> $GITHUB_ENV
-          echo "previous_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-          echo "current_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+          echo "::set-output name=previous_tag::$LATEST_TAG"
+          echo "::set-output name=current_tag::$NEW_TAG"
 
       # Grant Execute Permissions for the Script
       - name: Grant execute permissions to the script
@@ -75,26 +75,13 @@ jobs:
       - name: Generate Changelog from Script
         run: ./.github/scripts/generate-changelog.sh
 
-      # Read Changelog Content into Environment Variable
-      - name: Read Changelog
-        run: echo "CHANGELOG=$(cat changelog.md || echo 'No changelog available.')" >> $GITHUB_ENV
-
-      # Draft the Release with Changelog
-      - name: Draft Release
-        id: draft_release
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Publish the Release
+      # Publish the Release using changelog.md directly
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.current_tag }}
           name: "Release ${{ env.current_tag }}"
-          body: ${{ env.CHANGELOG }}
+          body_path: ./changelog.md # Use the changelog file directly
           artifacts: "release.zip"
           draft: false
           prerelease: false
