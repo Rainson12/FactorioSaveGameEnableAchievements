@@ -38,7 +38,9 @@ jobs:
         run: |
           mkdir -p release
           dotnet publish ./FactorioSaveGameEnableAchievements/FactorioSaveGameEnableAchievements.csproj -c Release -o release
-          zip -r "release-${{ env.current_tag }}.zip" release/
+          ZIP_NAME="FactorioSaveGameEnableAchievements-${{ env.current_tag || '2.0.28-1.0' }}.zip"
+          echo "Creating zip archive: $ZIP_NAME"
+          zip -r $ZIP_NAME release/
 
       # Set Git Identity for Tagging
       - name: Set Git Identity
