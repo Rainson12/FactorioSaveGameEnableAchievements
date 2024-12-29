@@ -1,6 +1,6 @@
-name-template: "Release {{ nextReleaseVersion }} 🚀"
-tag-template: "v{{ nextReleaseVersion }}"
-version-template: "{{ nextReleaseVersion }}"
+name-template: "Release ${{ nextReleaseVersion }} 🚀"
+tag-template: "v${{ nextReleaseVersion }}"
+version-template: "${{ nextReleaseVersion }}"
 
 categories:
   - title: "🚀 Features"
@@ -20,14 +20,14 @@ categories:
 change-template: "- $TITLE by @$AUTHOR in #$NUMBER"
 
 no-labels-merge-method: "title"
-no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/{{github.repository}}/commit/$FULL_SHA))"
+no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/${{ github.repository }}/commit/$FULL_SHA))"
 
 template: |
   ## What's Changed
   $CHANGES
 
   ## 📦 Full Changelog
-  repository: `{{ github.repository | default: 'unknown/repo' }}`  
-  previousTag: `{{ previousTag | default: 'N/A' }}`  
-  currentTag: `{{ currentTag | default: 'N/A' }}`  
-  [Compare Changes](https://github.com/{{ github.repository | default: 'unknown/repo' }}/compare/{{ previousTag | default: 'N/A' }}...{{ currentTag | default: 'N/A' }})
+  repository: `${{ github.repository }}`  
+  previousTag: `${{ env.PREVIOUS_TAG | default: 'N/A' }}`  
+  currentTag: `${{ env.CURRENT_TAG | default: 'N/A' }}`  
+  [Compare Changes](https://github.com/${{ github.repository }}/compare/${{ env.PREVIOUS_TAG | default: 'N/A' }}...${{ env.CURRENT_TAG | default: 'N/A' }})

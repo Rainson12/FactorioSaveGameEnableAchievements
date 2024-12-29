@@ -86,7 +86,8 @@ jobs:
             git tag -a $NEW_TAG -m "Release $NEW_TAG"
             git push origin $NEW_TAG
           fi
-          echo "tag=$NEW_TAG" >> $GITHUB_ENV
+          echo "previous_tag=$LATEST_TAG" >> $GITHUB_ENV
+          echo "current_tag=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Draft Release
         id: draft_release
@@ -95,6 +96,8 @@ jobs:
           config-name: release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PREVIOUS_TAG: ${{ env.previous_tag }}
+          CURRENT_TAG: ${{ env.current_tag }}
 
       - name: Publish Release
         uses: ncipollo/release-action@v1
