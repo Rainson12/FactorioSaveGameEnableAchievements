@@ -60,6 +60,11 @@ jobs:
               });
             }
 
+      - name: Set Git Identity
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
       - name: Generate Version Tag
         id: tag
         run: |
@@ -74,7 +79,6 @@ jobs:
             NEW_TAG="${GAME_VERSION}-$(printf %.1f $NEW_VERSION)"
           fi
 
-          # Verifica se a tag já existe
           if git rev-parse $NEW_TAG >/dev/null 2>&1; then
             echo "Tag $NEW_TAG already exists. Skipping..."
           else
