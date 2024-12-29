@@ -20,4 +20,4 @@ template: |
   $CHANGES
 
   ## 📦 Full Changelog
-  [Compare Changes](https://github.com/${{ github.repository }}/compare/${{ previousTag }}...${{ currentTag }})
+  [Compare Changes](https://github.com/${{github.repository}}/compare/${{previousTag}}...${{currentTag}})
