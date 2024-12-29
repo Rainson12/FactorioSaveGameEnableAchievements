@@ -1,5 +1,6 @@
 name-template: 'Release ${{ nextReleaseVersion }} 🚀'
 tag-template: 'v${{ nextReleaseVersion }}'
+
 categories:
   - title: '🚀 Features'
     labels:
@@ -14,13 +15,24 @@ categories:
   - title: '🧩 Dependencies'
     labels:
       - 'dependencies'
+
+# Template para alterações (PRs)
 change-template: '- $TITLE by @$AUTHOR in #$NUMBER'
+
+# Captura commits diretos (sem PR)
 no-labels-merge-method: 'title'
-no-labels-template: '- $TITLE (commit: [`$SHORT_SHA`](https://github.com/${{github.repository}}/commit/$FULL_SHA))'
+no-labels-template: '- $TITLE (commit: [`$SHORT_SHA`](https://github.com/{{github.repository}}/commit/$FULL_SHA))'
+
+# Exclui alterações na pasta .github do changelog
+exclude-labels:
+  - 'ignore-changelog'
+  - 'skip-release'
+exclude-contributors:
+  - 'github-actions[bot]'
+
 template: |
   ## What's Changed
   $CHANGES
 
   ## 📦 Full Changelog
-  [Compare Changes](https://github.com/${{github.repository}}/compare/${{previousTag}}...${{currentTag}})
-
+  [Compare Changes](https://github.com/{{github.repository}}/compare/{{previousTag}}...{{currentTag}})
