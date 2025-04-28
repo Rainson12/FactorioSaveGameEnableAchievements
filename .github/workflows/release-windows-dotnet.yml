@@ -1,0 +1,109 @@
+name: .NET Windows Release 🚀
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    outputs:
+      previous_tag: ${{ steps.tag.outputs.previous_tag }}
+      current_tag: ${{ steps.tag.outputs.current_tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build Project
+        run: dotnet build --configuration Release
+
+      - name: Publish Artifacts
+        run: |
+          mkdir -p release
+          dotnet publish ./FactorioSaveGameEnableAchievements/FactorioSaveGameEnableAchievements.csproj -c Release -o release
+
+      # Create Zip Archive with Version in Name
+      - name: Create Zip Archive
+        run: |
+          mkdir -p release
+          dotnet publish ./FactorioSaveGameEnableAchievements/FactorioSaveGameEnableAchievements.csproj -c Release -o release
+          ZIP_NAME="FactorioSaveGameEnableAchievements-${{ env.current_tag || '2.0.28-1.0' }}.zip"
+          echo "Creating zip archive: $ZIP_NAME"
+          zip -r $ZIP_NAME release/
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+
+      # Set Git Identity for Tagging
+      - name: Set Git Identity
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+      # Generate Tags Automatically
+      - name: Generate Version Tag
+        id: tag
+        run: |
+          GAME_VERSION="2.0.28"
+          LATEST_TAG=$(git tag --sort=-v:refname | grep "^${GAME_VERSION}-" | head -n 1)
+
+          if [ -z "$LATEST_TAG" ]; then
+            NEW_TAG="${GAME_VERSION}-1.0"
+            echo "Creating initial tag: $NEW_TAG"
+            git tag -a $NEW_TAG -m "Initial Release $NEW_TAG"
+            git push origin $NEW_TAG
+          else
+            LAST_VERSION=$(echo $LATEST_TAG | awk -F '-' '{print $2}')
+            NEW_VERSION=$(echo "$LAST_VERSION + 0.1" | bc)
+            NEW_TAG="${GAME_VERSION}-$(printf %.1f $NEW_VERSION)"
+            git tag -a $NEW_TAG -m "Release $NEW_TAG"
+            git push origin $NEW_TAG
+          fi
+
+          echo "previous_tag=$LATEST_TAG" >> $GITHUB_ENV
+          echo "current_tag=$NEW_TAG" >> $GITHUB_ENV
+          echo "::set-output name=previous_tag::$LATEST_TAG"
+          echo "::set-output name=current_tag::$NEW_TAG"
+
+      # Grant Execute Permissions for the Script
+      - name: Grant execute permissions to the script
+        run: chmod +x .github/scripts/generate-changelog.sh
+
+      # Run Changelog Generation Script
+      - name: Generate Changelog from Script
+        run: ./.github/scripts/generate-changelog.sh
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      # Read Changelog Content into Environment Variable
+      - name: Read Changelog
+        run: echo "CHANGELOG<<EOF" >> $GITHUB_ENV && cat CHANGELOG.md >> $GITHUB_ENV && echo "EOF" >> $GITHUB_ENV
+
+      # Draft the Release with Changelog
+      - name: Draft Release
+        id: draft_release
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Publish the Release with Versioned Zip
+      - name: Publish Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.current_tag }}
+          name: "Release ${{ env.current_tag }}"
+          body: ${{ env.CHANGELOG }}
+          artifacts: ${{ env.ZIP_NAME }}
+          draft: false
+          prerelease: false

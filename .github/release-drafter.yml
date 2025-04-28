@@ -1,0 +1,23 @@
+name-template: "Release ${{ nextReleaseVersion }} 🎉"
+tag-template: "v${{ nextReleaseVersion }}"
+
+categories:
+  - title: "🌟 Features"
+    labels:
+      - "feature"
+  - title: "🐛 Fixes"
+    labels:
+      - "fix"
+  - title: "🔄 Updates"
+    labels:
+      - "update"
+  - title: "🗑️ Removes"
+    labels:
+      - "remove"
+
+change-template: "- $TITLE by @$AUTHOR"
+no-labels-template: "- $TITLE (commit: [`$SHORT_SHA`](https://github.com/${{ github.repository }}/commit/$FULL_SHA))"
+
+template: |
+  ## 🚀 Release ${{ nextReleaseVersion }}
+  $CHANGES
